@@ -1,0 +1,6 @@
+Python
+Flask
+HTML
+CSS
+JINJA
+SQLITE3
