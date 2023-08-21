@@ -11,44 +11,53 @@
     </head>
     <body>
 
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img src="/static/Elephant.jpg" alt="Elephant" height="60">
-            
+          <a class="navbar-brand title fw-bolder fs-2" href="/">
+            <img src="/static/Elephant.jpg" alt="Elephant" height="80">
+            The Blue Elephant
           </a>
-          <form class="d-flex w-50 justify-content-end" role="search">
+          <form class="d-flex w-50" role="search">
             <input class="form-control me-2 " type="search" placeholder="Search Image Library" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
-          <ul class="nav justify-content-end">
-            <li class="nav-item">
-              <a class="nav-link" href="/login">Log in</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/register">Register</a>
-            </li>
-          </ul>
+          <!--- {% if logged_in is defined -%} --->
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/account">My Account</a>
+              </li>
+            </ul>
+          <!--- {% else -%} --->
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Log in</a>
+              </li>
+              <div class="a_line"></div>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+              </li>
+            </ul>
+          <!--- {% endif %} --->
         </div>
       </nav>
 
-        {% if get_flashed_messages() %}
-            <header>
-                <div class="alert alert-primary mb-0 text-center" role="alert">
-                    {{ get_flashed_messages() | join(" ") }}
-                </div>
-            </header>
-        {% endif %}
+      {% if get_flashed_messages() %}
+          <header>
+              <div class="alert alert-primary mb-0 text-center" role="alert">
+                  {{ get_flashed_messages() | join(" ") }}
+              </div>
+          </header>
+      {% endif %}
         
 
-        <main class="container-fluid py-5 text-center">
-            {% block main %}{% endblock %}
-        </main>
+      <main class="container-fluid py-5 text-center">
+          {% block main %}{% endblock %}
+      </main>
 
-        <footer>
-            <p>ADD ME!</p>
-        </footer>
+      <footer class="footer">
+          <div>ADD ME</div>
+      </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     </body>
 </html>

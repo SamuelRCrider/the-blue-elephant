@@ -1,0 +1,38 @@
+.title {
+    font-family: papyrus, fantasy;
+}
+
+.a_line {
+    align-self: center;
+    background-color: #d1d1d1;
+    content: "";
+    height: 32px;
+    width: 1px;
+}
+
+.register_container {
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1;
+}
+
+.register_left {
+    background-size: contain;
+    background-position: center center;
+    background-image: url(/static/register_cat.png);
+    -webkit-box-flex: 1;
+    flex: 1;
+}
+
+.register_right {
+    flex-basis: 60%;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+  }
+
