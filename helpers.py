@@ -11,3 +11,9 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return wrapper
+
+
+def logged_in():
+    if session.get("user_id") is None:
+        return False
+    return True
