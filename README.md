@@ -1,3 +1,1 @@
 # the-blue-elephant
-
-hello
