@@ -36,3 +36,6 @@
     text-align: center;
   }
 
+.image {
+    object-fit: contain;
+}

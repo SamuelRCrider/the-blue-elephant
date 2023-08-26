@@ -6,6 +6,49 @@
 
 {% block main %}
 
-    hello account page!
+<div class="register_container">
+        <div class="card" style="width: 41rem;">
+            <img src="/static/seal.png" class="card-img-top" alt="seal">
+            <div class="card-body">
+                <p class="card-text fs-3">
+                    Join our email list to receive pictures of cute animals at a frequency of your choice!
+                </p>
+            </div>
+        </div>
 
+    <div class="register_right">
+        <form action="/account" method="post">
+            <div>
+                <label class="fs-1 title fw-bolder">Join Our Email List</label>
+            </div>
+            
+            <br>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="Enter Email" type="email">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_email" name="confirm_email" placeholder="Re-Enter Email" type="email">
+            </div>
+            <div class="mb-3">
+                <select id="frequency" name="frequency" class="form-select mx-auto w-auto">
+                    <option disabled selected>Email Frequency</option>
+                    <option value="0">Daily</option>
+                    <option value="1">Every Sunday</option>
+                    <option value="2">1st of Each Month</option>
+                    <option value="3">1st of Each Year</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Join!</button>
+        </form>
+        <br><br>
+        <div class="card mx-auto" style="width: 40rem;">
+            <div class="card-body">
+              <h5 class="card-title">Account Settings</h5>
+              <a href="/contact" class="card-link">Contact Us</a>
+              <a href="/delete" class="card-link">Delete Account</a>
+              <a href="/update" class="card-link">Update Email Frequency</a>
+            </div>
+          </div>
+    </div>   
+</div>
 {% endblock %}

@@ -44,7 +44,7 @@ def index():
 
         return redirect("/")
     else:
-        if logged_in:
+        if logged_in():
             return render_template("index.html", log=True)
         return render_template("index.html", log=False)
 
@@ -149,10 +149,82 @@ def logout():
 @login_required
 def account():
     if request.method == "POST":
-        ...
+        # get email and confirmation
+        # make sure it is a valid email and it matches confirmation
+        # make sure it doesn't already exist in database
+        # if good, get frequency and put it in database
+        email = request.form.get("email")
+        if not email:
+            flash("Please Enter Email")
+            return redirect("/account")
+
+        confirm_email = request.form.get("confirm_email")
+        if not confirm_email:
+            flash("Must Confirm Email")
+            return redirect("/account")
+
+        if email != confirm_email:
+            flash("Emails Entered Do Not Match")
+            return redirect("/account")
+
+        frequency = request.form.get("frequency")
+        if not frequency:
+            flash("Must Select Frequency")
+            return redirect("/account")
+
+        frequency = int(frequency)
+
+        try:
+            query_db(
+                "INSERT INTO emails (user_id, address, frequency) VALUES (?, ?, ?)",
+                [session["user_id"], email, frequency],
+            )
+            flash("Success! Welcome to the Email List!")
+        except Exception:
+            flash("Unable To Join Email List At This Time")
+            return redirect("/account")
 
         return redirect("/account")
     else:
         if logged_in():
             return render_template("account.html", log=True)
-        return render_template("/account.html", log=False)
+        return render_template("account.html", log=False)
+
+
+@app.route("/contact", methods=["GET", "POST"])
+@login_required
+def contact():
+    if request.method == "POST":
+        ...
+        flash("Message Sent!")
+        return redirect("/account")
+    else:
+        if logged_in():
+            return render_template("contact.html", log=True)
+        return render_template("index.html", log=False)
+
+
+@app.route("/update", methods=["GET", "POST"])
+@login_required
+def update():
+    if request.method == "POST":
+        ...
+        flash("Email Frequency Updated!")
+        return redirect("/account")
+    else:
+        if logged_in():
+            return render_template("update.html", log=True)
+        return render_template("index.html", log=False)
+
+
+@app.route("/delete", methods=["GET", "POST"])
+@login_required
+def delete():
+    if request.method == "POST":
+        ...
+        flash("Account Deleted!")
+        return redirect("/index")
+    else:
+        if logged_in():
+            return render_template("delete.html", log=True)
+        return render_template("index.html", log=False)
