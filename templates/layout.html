@@ -17,8 +17,8 @@
             <img src="/static/Elephant.jpg" alt="Elephant" height="80">
             The Blue Elephant
           </a>
-          <form class="d-flex w-50" role="search">
-            <input class="form-control me-2 " type="search" placeholder="Search Image Library" aria-label="Search">
+          <form action="/" method="post" class="d-flex w-50">
+            <input class="form-control me-2 " type="text"  name="search" id="search" placeholder="Search Image Library">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           {% if log == True %}

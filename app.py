@@ -1,7 +1,9 @@
 from flask import Flask, session, redirect, render_template, request, flash, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
+import urllib.request, json
 import sqlite3
+from secret_keys import UNSPLASH_API_KEY
 
 from helpers import login_required, logged_in
 
@@ -15,6 +17,9 @@ Session(app)
 
 # configure database
 DATABASE = "blue_elephant.db"
+
+# configure api
+unsplash_api_url = "https://api.unsplash.com/"
 
 
 def query_db(query, args=(), one=False):
@@ -40,10 +45,21 @@ def query_db(query, args=(), one=False):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        # code to hit api and redirect to a single page of the searched images (10 images)
+        query = request.form.get("search")
+        if not query:
+            flash("Must Enter Query")
+            return redirect("/")
+
+        url = f"{unsplash_api_url}search/photos?client_id={UNSPLASH_API_KEY}&query={query}"
+        response = urllib.request.urlopen(url)
+        dict = json.load(response)
+
+        return render_template("index.html", dict=dict)
+    else:
+        # code to hit api and return 10 random images (single page)
         ...
 
-        return redirect("/")
-    else:
         if logged_in():
             return render_template("index.html", log=True)
         return render_template("index.html", log=False)

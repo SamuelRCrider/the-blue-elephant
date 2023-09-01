@@ -7,3 +7,5 @@ temp/
 # ignore ds stores!
 **/.DS_Store
 
+# ignore .env file
+secret_keys.py
