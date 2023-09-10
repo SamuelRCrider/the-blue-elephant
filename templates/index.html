@@ -26,9 +26,13 @@
                 </p>
             </div>
         </div>
-
         <div>
-            {{ dict }}
+            <br>
+        </div>
+        <div>
+            {% for url in url_Data %}
+                <img src="{{ url }}" class="url_img">
+            {% endfor %}
         </div>
 
       </div>

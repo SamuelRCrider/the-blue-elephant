@@ -17,3 +17,26 @@ def logged_in():
     if session.get("user_id") is None:
         return False
     return True
+
+
+def transform_post_rawData(Data):
+    results_Data = Data["results"]
+    url_results = []
+
+    for element in results_Data:
+        url_Data = element["urls"]
+        url_results.append(url_Data["raw"])
+
+    url_results.pop(9)
+
+    return url_results
+
+
+def transform_get_rawData(Data):
+    url_results = []
+
+    for element in Data:
+        url_Data = element["urls"]
+        url_results.append(url_Data["raw"])
+
+    return url_results

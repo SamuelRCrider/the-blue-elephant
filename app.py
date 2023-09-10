@@ -5,7 +5,12 @@ import urllib.request, json
 import sqlite3
 from secret_keys import UNSPLASH_API_KEY
 
-from helpers import login_required, logged_in
+from helpers import (
+    login_required,
+    logged_in,
+    transform_post_rawData,
+    transform_get_rawData,
+)
 
 # configure app
 app = Flask(__name__)
@@ -55,14 +60,20 @@ def index():
         response = urllib.request.urlopen(url)
         dict = json.load(response)
 
-        return render_template("index.html", dict=dict)
+        url_Data = transform_post_rawData(dict)
+
+        return render_template("index.html", url_Data=url_Data)
     else:
         # code to hit api and return 10 random images (single page)
-        ...
+        url = f"{unsplash_api_url}photos/random?client_id={UNSPLASH_API_KEY}&query=cute+animals&count=9"
+        response = urllib.request.urlopen(url)
+        dict = json.load(response)
+
+        url_Data = transform_get_rawData(dict)
 
         if logged_in():
-            return render_template("index.html", log=True)
-        return render_template("index.html", log=False)
+            return render_template("index.html", log=True, url_Data=url_Data)
+        return render_template("index.html", log=False, url_Data=url_Data)
 
 
 @app.route("/register", methods=["GET", "POST"])

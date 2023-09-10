@@ -29,7 +29,6 @@
 }
 
 .footer {
-    position: fixed;
     left: 0;
     bottom: 20px;
     width: 100%;
@@ -38,4 +37,10 @@
 
 .image {
     object-fit: contain;
+}
+
+.url_img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
 }
