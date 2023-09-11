@@ -1,11 +1,25 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    delete
+    Delete Account
 {% endblock %}
 
 {% block main %}
 
-
+    <div class="register_right">
+        <form action="/delete" method="post">
+            <div>
+                <label class="fs-1 title fw-bolder">Delete Account</label>
+            </div>
+            <br>
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Delete</button>
+        </form>
+    </div>
             
 {% endblock %}

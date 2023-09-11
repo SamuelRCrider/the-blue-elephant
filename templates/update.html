@@ -1,11 +1,28 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    update
+    Update Account
 {% endblock %}
 
 {% block main %}
 
-
+    <div class="register_right">
+        <form action="/update" method="post">
+            <div>
+                <label class="fs-1 title fw-bolder">Update Email Frequency</label>
+            </div>
+            <br>
+            <div class="mb-3">
+                <select id="frequency" name="frequency" class="form-select mx-auto w-auto">
+                    <option disabled selected>Email Frequency</option>
+                    <option value="0">Daily</option>
+                    <option value="1">Weekly</option>
+                    <option value="2">Monthly</option>
+                    <option value="3">Yearly</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </form>
+    </div>
             
 {% endblock %}

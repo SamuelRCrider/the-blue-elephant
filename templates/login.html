@@ -6,12 +6,12 @@
 
 {% block main %}
 
-    <div class="register_container">
-        <div class="register_left">
-
+    <div class="container text-center">
+        <div class="row justify-content-between">
+        <div class="col-4">
+            <img src="{{ url_Data }}" class="url_img_2">
         </div>
-
-        <div class="register_right">
+        <div class="col-4">
             <form action="/login" method="post">
                 <div>
                     <label class="fs-1 title fw-bolder">Log In</label>
@@ -32,7 +32,8 @@
                 <button class="btn btn-primary" type="submit">Log In</button>
             </form>
         </div>
+        </div>
     </div>
-
+    </div>
 
 {% endblock %}

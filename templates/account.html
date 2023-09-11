@@ -17,38 +17,58 @@
         </div>
 
     <div class="register_right">
-        <form action="/account" method="post">
-            <div>
-                <label class="fs-1 title fw-bolder">Join Our Email List</label>
+        {% if temp == False %}
+            <form action="/account" method="post">
+                <div>
+                    <label class="fs-1 title fw-bolder">Join Our Email List</label>
+                </div>
+                
+                <br>
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="Enter Email" type="email">
+                </div>
+                <div class="mb-3">
+                    <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_email" name="confirm_email" placeholder="Re-Enter Email" type="email">
+                </div>
+                <div class="mb-3">
+                    <select id="frequency" name="frequency" class="form-select mx-auto w-auto">
+                        <option disabled selected>Email Frequency</option>
+                        <option value="0">Daily</option>
+                        <option value="1">Weekly</option>
+                        <option value="2">Monthly</option>
+                        <option value="3">Yearly</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" type="submit">Join!</button>
+            </form>
+            <br><br>
+            <div class="card mx-auto" style="width: 40rem;">
+                <div class="card-body">
+                <h5 class="card-title">Account Settings</h5>
+                <a href="/contact" class="card-link">Contact Us</a>
+                <a href="/delete" class="card-link">Delete Account</a>
+                <a href="/update" class="card-link">Update Email Frequency</a>
+                </div>
             </div>
-            
-            <br>
-            <div class="mb-3">
-                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="email" name="email" placeholder="Enter Email" type="email">
+        {% else %}
+            <div class="card mx-auto" style="width: 45rem;">
+                <img src="/static/checkmark.png" class="card-img-top" alt="checkmark">
+                <div class="card-body">
+                    <p class="card-text fs-3">
+                        You've Joined Our Email List!
+                    </p>
+                </div>
             </div>
-            <div class="mb-3">
-                <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_email" name="confirm_email" placeholder="Re-Enter Email" type="email">
+            <br><br>
+            <div class="card mx-auto" style="width: 40rem;">
+                <div class="card-body">
+                <h5 class="card-title">Account Settings</h5>
+                <a href="/contact" class="card-link">Contact Us</a>
+                <a href="/delete" class="card-link">Delete Account</a>
+                <a href="/update" class="card-link">Update Email Frequency</a>
+                </div>
             </div>
-            <div class="mb-3">
-                <select id="frequency" name="frequency" class="form-select mx-auto w-auto">
-                    <option disabled selected>Email Frequency</option>
-                    <option value="0">Daily</option>
-                    <option value="1">Every Sunday</option>
-                    <option value="2">1st of Each Month</option>
-                    <option value="3">1st of Each Year</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" type="submit">Join!</button>
-        </form>
-        <br><br>
-        <div class="card mx-auto" style="width: 40rem;">
-            <div class="card-body">
-              <h5 class="card-title">Account Settings</h5>
-              <a href="/contact" class="card-link">Contact Us</a>
-              <a href="/delete" class="card-link">Delete Account</a>
-              <a href="/update" class="card-link">Update Email Frequency</a>
-            </div>
-          </div>
+        {% endif %}
     </div>   
 </div>
 {% endblock %}

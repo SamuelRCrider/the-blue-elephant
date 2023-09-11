@@ -10,6 +10,8 @@ from helpers import (
     logged_in,
     transform_post_rawData,
     transform_get_rawData,
+    transform_login_rawData,
+    send_email,
 )
 
 # configure app
@@ -127,7 +129,15 @@ def register():
         session["user_id"] = row["id"]
 
         return redirect("/account")
-    return render_template("register.html")
+
+    else:
+        url = f"{unsplash_api_url}photos/random?client_id={UNSPLASH_API_KEY}&query=cute+animals"
+        response = urllib.request.urlopen(url)
+        dict = json.load(response)
+
+        url_Data = transform_login_rawData(dict)
+
+        return render_template("register.html", url_Data=url_Data)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -162,7 +172,15 @@ def login():
         session["user_id"] = data_check["id"]
 
         return redirect("/account")
-    return render_template("login.html")
+
+    else:
+        url = f"{unsplash_api_url}photos/random?client_id={UNSPLASH_API_KEY}&query=cute+animals"
+        response = urllib.request.urlopen(url)
+        dict = json.load(response)
+
+        url_Data = transform_login_rawData(dict)
+
+        return render_template("login.html", url_Data=url_Data)
 
 
 @app.route("/logout")
@@ -211,31 +229,48 @@ def account():
             flash("Unable To Join Email List At This Time")
             return redirect("/account")
 
+        # NOTE handle sending emails here, or figure out better idea
+        ...
+
         return redirect("/account")
     else:
         if logged_in():
-            return render_template("account.html", log=True)
+            temp = query_db(
+                "SELECT address FROM emails WHERE user_id = ?", [session["user_id"]]
+            )
+            if not temp:
+                return render_template("account.html", log=True, temp=False)
+            else:
+                return render_template("account.html", log=True, temp=True)
         return render_template("account.html", log=False)
 
 
 @app.route("/contact", methods=["GET", "POST"])
 @login_required
 def contact():
-    if request.method == "POST":
-        ...
-        flash("Message Sent!")
-        return redirect("/account")
-    else:
-        if logged_in():
-            return render_template("contact.html", log=True)
-        return render_template("index.html", log=False)
+    if logged_in():
+        return render_template("contact.html", log=True)
+    return render_template("index.html", log=False)
 
 
 @app.route("/update", methods=["GET", "POST"])
 @login_required
 def update():
     if request.method == "POST":
-        ...
+        frequency = request.form.get("frequency")
+        if not frequency:
+            flash("Please Select Frequency")
+            return redirect("/update")
+
+        try:
+            query_db(
+                "UPDATE emails SET frequency = ? WHERE user_id = ?",
+                [frequency, session["user_id"]],
+            )
+        except Exception:
+            flash("Frequency Update Failed, Please Try Again Later")
+            return redirect("/account")
+
         flash("Email Frequency Updated!")
         return redirect("/account")
     else:
@@ -248,9 +283,54 @@ def update():
 @login_required
 def delete():
     if request.method == "POST":
-        ...
+        username = request.form.get("username")
+        if not username:
+            flash("Please Enter Username")
+            return redirect("/delete")
+        try:
+            data_check = query_db(
+                "SELECT * FROM users WHERE username = ?", [username], one=True
+            )
+        except TypeError:
+            flash("Username Not Valid")
+            return redirect("/delete")
+
+        password = request.form.get("password")
+        if not password:
+            flash("Please Enter Password")
+            return redirect("/delete")
+        try:
+            check_password_hash(data_check["hash"], password)
+        except TypeError:
+            flash("Password Not Valid")
+            return redirect("/delete")
+
+        if session["user_id"] == data_check["id"]:
+            try:
+                query_db("DELETE FROM users WHERE id = ?", [data_check["id"]])
+            except Exception:
+                flash("Account Cannot Be Deleted At This Time, Please Try Again Later")
+                return redirect("/account")
+
+            check_email = query_db(
+                "SELECT * FROM emails WHERE user_id = ?", [data_check["id"]]
+            )
+            if check_email:
+                try:
+                    query_db("DELETE FROM emails WHERE user_id = ?", [data_check["id"]])
+                except Exception:
+                    flash(
+                        "Account Cannot Be Deleted At This Time, Please Try Again Later"
+                    )
+                    return redirect("/account")
+
+        else:
+            flash("Account Cannot Be Deleted At This Time, Please Try Again Later")
+            return redirect("/account")
+
         flash("Account Deleted!")
-        return redirect("/index")
+        session.clear()
+        return redirect("/")
     else:
         if logged_in():
             return render_template("delete.html", log=True)
