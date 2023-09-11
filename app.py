@@ -85,7 +85,7 @@ def send_mail():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(send_mail, "interval", minutes=1)
+scheduler.add_job(send_mail, "interval", minutes=1440)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
