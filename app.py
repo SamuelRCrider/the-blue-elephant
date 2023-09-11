@@ -1,9 +1,15 @@
-from flask import Flask, session, redirect, render_template, request, flash, g
+from flask import Flask, session, redirect, render_template, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_session import Session
 import urllib.request, json
 import sqlite3
-from secret_keys import UNSPLASH_API_KEY
+import smtplib
+import ssl
+from email.message import EmailMessage
+from secret_keys import UNSPLASH_API_KEY, MAIL_PASSWORD
+import atexit
+
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from helpers import (
     login_required,
@@ -11,22 +17,22 @@ from helpers import (
     transform_post_rawData,
     transform_get_rawData,
     transform_login_rawData,
-    send_email,
 )
 
 # configure app
 app = Flask(__name__)
+
 
 # configure session as filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# configure database
-DATABASE = "blue_elephant.db"
-
 # configure api
 unsplash_api_url = "https://api.unsplash.com/"
+
+# configure database
+DATABASE = "blue_elephant.db"
 
 
 def query_db(query, args=(), one=False):
@@ -46,6 +52,44 @@ def query_db(query, args=(), one=False):
     res = cur.fetchall()
     db.close()
     return (res[0] if res else None) if one else res
+
+
+# handle sending emails here
+def send_mail():
+    users = query_db("SELECT * FROM emails")
+    # Define email sender and receiver
+    for user in users:
+        email_sender = "the.official.blue.elephant@gmail.com"
+        email_password = MAIL_PASSWORD
+        email_receiver = user["address"]
+
+        # Set the subject and body of the email
+        subject = "Your Daily Dose Of Cuteness"
+        body = """
+        a bunch of images
+        """
+
+        em = EmailMessage()
+        em["From"] = email_sender
+        em["To"] = email_receiver
+        em["Subject"] = subject
+        em.set_content(body)
+
+        # Add SSL (layer of security)
+        context = ssl.create_default_context()
+
+        # Log in and send the email
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+            smtp.login(email_sender, email_password)
+            smtp.sendmail(email_sender, email_receiver, em.as_string())
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(send_mail, "interval", minutes=1)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 # app routes
@@ -212,25 +256,15 @@ def account():
             flash("Emails Entered Do Not Match")
             return redirect("/account")
 
-        frequency = request.form.get("frequency")
-        if not frequency:
-            flash("Must Select Frequency")
-            return redirect("/account")
-
-        frequency = int(frequency)
-
         try:
             query_db(
-                "INSERT INTO emails (user_id, address, frequency) VALUES (?, ?, ?)",
-                [session["user_id"], email, frequency],
+                "INSERT INTO emails (user_id, address) VALUES (?, ?)",
+                [session["user_id"], email],
             )
             flash("Success! Welcome to the Email List!")
         except Exception:
             flash("Unable To Join Email List At This Time")
             return redirect("/account")
-
-        # NOTE handle sending emails here, or figure out better idea
-        ...
 
         return redirect("/account")
     else:
@@ -251,32 +285,6 @@ def contact():
     if logged_in():
         return render_template("contact.html", log=True)
     return render_template("index.html", log=False)
-
-
-@app.route("/update", methods=["GET", "POST"])
-@login_required
-def update():
-    if request.method == "POST":
-        frequency = request.form.get("frequency")
-        if not frequency:
-            flash("Please Select Frequency")
-            return redirect("/update")
-
-        try:
-            query_db(
-                "UPDATE emails SET frequency = ? WHERE user_id = ?",
-                [frequency, session["user_id"]],
-            )
-        except Exception:
-            flash("Frequency Update Failed, Please Try Again Later")
-            return redirect("/account")
-
-        flash("Email Frequency Updated!")
-        return redirect("/account")
-    else:
-        if logged_in():
-            return render_template("update.html", log=True)
-        return render_template("index.html", log=False)
 
 
 @app.route("/delete", methods=["GET", "POST"])

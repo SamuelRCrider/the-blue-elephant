@@ -11,7 +11,7 @@
             <img src="/static/seal.png" class="card-img-top" alt="seal">
             <div class="card-body">
                 <p class="card-text fs-3">
-                    Join our email list to receive pictures of cute animals at a frequency of your choice!
+                    Join our email list to receive pictures of cute animals daily!
                 </p>
             </div>
         </div>
@@ -30,15 +30,6 @@
                 <div class="mb-3">
                     <input autocomplete="off" class="form-control mx-auto w-auto" id="confirm_email" name="confirm_email" placeholder="Re-Enter Email" type="email">
                 </div>
-                <div class="mb-3">
-                    <select id="frequency" name="frequency" class="form-select mx-auto w-auto">
-                        <option disabled selected>Email Frequency</option>
-                        <option value="0">Daily</option>
-                        <option value="1">Weekly</option>
-                        <option value="2">Monthly</option>
-                        <option value="3">Yearly</option>
-                    </select>
-                </div>
                 <button class="btn btn-primary" type="submit">Join!</button>
             </form>
             <br><br>
@@ -47,7 +38,6 @@
                 <h5 class="card-title">Account Settings</h5>
                 <a href="/contact" class="card-link">Contact Us</a>
                 <a href="/delete" class="card-link">Delete Account</a>
-                <a href="/update" class="card-link">Update Email Frequency</a>
                 </div>
             </div>
         {% else %}
@@ -65,7 +55,6 @@
                 <h5 class="card-title">Account Settings</h5>
                 <a href="/contact" class="card-link">Contact Us</a>
                 <a href="/delete" class="card-link">Delete Account</a>
-                <a href="/update" class="card-link">Update Email Frequency</a>
                 </div>
             </div>
         {% endif %}
