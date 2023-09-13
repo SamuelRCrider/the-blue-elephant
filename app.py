@@ -57,6 +57,10 @@ def query_db(query, args=(), one=False):
 # handle sending emails here
 def send_mail():
     users = query_db("SELECT * FROM emails")
+    url = f"{unsplash_api_url}photos/random?client_id={UNSPLASH_API_KEY}&query=cute+animals&count=9"
+    response = urllib.request.urlopen(url)
+    dict = json.load(response)
+    urls = transform_get_rawData(dict)
     # Define email sender and receiver
     for user in users:
         email_sender = "the.official.blue.elephant@gmail.com"
@@ -65,9 +69,7 @@ def send_mail():
 
         # Set the subject and body of the email
         subject = "Your Daily Dose Of Cuteness"
-        body = """
-        a bunch of images
-        """
+        body = f"{urls}"
 
         em = EmailMessage()
         em["From"] = email_sender
